@@ -155,31 +155,9 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
     private void addTab(int index, CharSequence text, int iconResId) {
         final ContainerTabView container = (ContainerTabView) LayoutInflater.from(getContext()).inflate(R.layout.vpi_tab_page_indicator, mTabLayout, false);
 
-//        final ContainerTabView container = new ContainerTabView(getContext(), R.attr.vpiTabPageIndicatorStyle);
         container.index = index;
         container.setFocusable(true);
         container.setOnClickListener(mTabClickListener);
-//        container.setOrientation(LinearLayout.VERTICAL);
-//
-//        final LinearLayout innerContainer = new LinearLayout(getContext());
-//        final LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-//        innerParams.gravity = Gravity.CENTER;
-//        container.addView(innerContainer, innerParams);
-//
-//
-//        if (iconResId != 0) {
-//            final ImageView imageView = new ImageView(getContext());
-//            imageView.setImageResource(iconResId);
-//            final LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-//            imageParams.gravity = Gravity.CENTER;
-//            innerContainer.addView(imageView, imageParams);
-//        }
-//
-//        final TextView textView = new TextView(getContext(), null, R.attr.vpiTextTabPageIndicatorStyle);
-//        textView.setText(text);
-//        final LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-//        textParams.gravity = Gravity.CENTER;
-//        innerContainer.addView(textView, textParams);
 
         if(iconResId != 0) {
             final ImageView imageView = (ImageView) container.findViewById(R.id.vpi_tab_page_indicator_image);
