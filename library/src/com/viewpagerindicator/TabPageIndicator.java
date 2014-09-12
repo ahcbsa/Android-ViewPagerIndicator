@@ -21,10 +21,13 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -54,9 +57,9 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
 
     private final OnClickListener mTabClickListener = new OnClickListener() {
         public void onClick(View view) {
-            TabView tabView = (TabView)view;
+            ContainerTabView tabView = (ContainerTabView)view;
             final int oldSelected = mViewPager.getCurrentItem();
-            final int newSelected = tabView.getIndex();
+            final int newSelected = tabView.index;
             mViewPager.setCurrentItem(newSelected);
             if (oldSelected == newSelected && mTabReselectedListener != null) {
                 mTabReselectedListener.onTabReselected(newSelected);
@@ -150,17 +153,43 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
     }
 
     private void addTab(int index, CharSequence text, int iconResId) {
-        final TabView tabView = new TabView(getContext());
-        tabView.mIndex = index;
-        tabView.setFocusable(true);
-        tabView.setOnClickListener(mTabClickListener);
-        tabView.setText(text);
+        final ContainerTabView container = (ContainerTabView) LayoutInflater.from(getContext()).inflate(R.layout.vpi_tab_page_indicator, mTabLayout, false);
 
-        if (iconResId != 0) {
-            tabView.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0);
+//        final ContainerTabView container = new ContainerTabView(getContext(), R.attr.vpiTabPageIndicatorStyle);
+        container.index = index;
+        container.setFocusable(true);
+        container.setOnClickListener(mTabClickListener);
+//        container.setOrientation(LinearLayout.VERTICAL);
+//
+//        final LinearLayout innerContainer = new LinearLayout(getContext());
+//        final LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+//        innerParams.gravity = Gravity.CENTER;
+//        container.addView(innerContainer, innerParams);
+//
+//
+//        if (iconResId != 0) {
+//            final ImageView imageView = new ImageView(getContext());
+//            imageView.setImageResource(iconResId);
+//            final LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+//            imageParams.gravity = Gravity.CENTER;
+//            innerContainer.addView(imageView, imageParams);
+//        }
+//
+//        final TextView textView = new TextView(getContext(), null, R.attr.vpiTextTabPageIndicatorStyle);
+//        textView.setText(text);
+//        final LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+//        textParams.gravity = Gravity.CENTER;
+//        innerContainer.addView(textView, textParams);
+
+        if(iconResId != 0) {
+            final ImageView imageView = (ImageView) container.findViewById(R.id.vpi_tab_page_indicator_image);
+            imageView.setImageResource(iconResId);
         }
 
-        mTabLayout.addView(tabView, new LinearLayout.LayoutParams(0, MATCH_PARENT, 1));
+        final TextView textView = (TextView) container.findViewById(R.id.vpi_tab_page_indicator_text);
+        textView.setText(text);
+
+        mTabLayout.addView(container, new LinearLayout.LayoutParams(0, MATCH_PARENT, 1));
     }
 
     @Override
@@ -258,28 +287,19 @@ public class TabPageIndicator extends HorizontalScrollView implements PageIndica
         mListener = listener;
     }
 
-    private class TabView extends TextView {
-        private int mIndex;
+    public static class ContainerTabView extends RelativeLayout {
+        private int index;
 
-        public TabView(Context context) {
-            super(context, null, R.attr.vpiTabPageIndicatorStyle);
+        public ContainerTabView(Context context) {
+            super(context);
         }
 
-        @Override
-        public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-            // Re-measure if we went beyond our maximum size.
-            /*
-            if (mMaxTabWidth > 0 && getMeasuredWidth() > mMaxTabWidth) {
-                super.onMeasure(MeasureSpec.makeMeasureSpec(mMaxTabWidth, MeasureSpec.EXACTLY),
-                        heightMeasureSpec);
-            }
-            */
+        public ContainerTabView(Context context, AttributeSet attrs) {
+            super(context, attrs);
         }
 
-        public int getIndex() {
-            return mIndex;
+        public ContainerTabView(Context context, AttributeSet attrs, int defStyle) {
+            super(context, attrs, defStyle);
         }
     }
 }
